@@ -1,4 +1,4 @@
-name: Nextflow CI
+name: Nextflow Workflow Tests
 
 on:
   push:

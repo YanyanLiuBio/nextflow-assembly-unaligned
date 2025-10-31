@@ -1,7 +1,7 @@
 process CALC_UNALIGNED_STATS {
     tag "$sample_id"
     
-    container 'seqwell/python:v1.0'
+
     input:
     tuple val(sample_id), path(unaligned_file), path(alignment_tsv)
 

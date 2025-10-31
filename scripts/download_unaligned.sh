@@ -1,6 +1,6 @@
 #!/bin/bash
 
-aws s3 ls s3://seqwell-analysis/20250516_Admera_Health/spades_busco/QUAST/ --recursive \
+aws s3 ls s3://seqwell-analysis/20250627_NextSeq2000/Salmonella_spades_busco/QUAST/ --recursive \
   | grep "contigs.unaligned$" \
   | awk '{print $4}' \
   | while read path; do

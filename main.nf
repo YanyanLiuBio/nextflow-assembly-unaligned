@@ -1,23 +1,22 @@
-#!/usr/bin/env nextflow
-
-include { CircularPerBasePlot } from './modules/circular_cov_plot.nf'
 
 
+include { CALC_UNALIGNED_STATS } from './modules/calc_unaligned_stats.nf'
+include { UNALIGNED_SUMMARY } from './modules/unaligned_summary.nf'
+
+all_align_channel = channel.fromPath("tests/aligned/*")
+                           .map{ it -> tuple(it.baseName.replace("all_alignments_", ""), it)}
+unalign_channel = channel.fromPath("tests/unaligned/*")
+                         .map{ it -> tuple(it.baseName, it)}
+                           
+
+ch_samples = unalign_channel
+             .join(all_align_channel)
+             .take(2)
+
+ch_samples.view()     
 
 workflow {
-  
+    ch_results = CALC_UNALIGNED_STATS(ch_samples)
     
-  
-  gbk_ch = channel.fromPath("${params.path}" + "/GBK/*.gbk")
-           .map{ it -> tuple( it.baseName, it)}
-           
-  cov_ch = channel.fromPath("${params.path}" + "/per_base_data/*.csv")
-           .map{ it -> tuple( it.baseName.replace("per_base_data_",""), it)}
-  
-  gbk_cov_ch = gbk_ch.join( cov_ch)
-  
-  CircularPerBasePlot( gbk_cov_ch )
-  
-  
+    UNALIGNED_SUMMARY( ch_results.collect())
 }
-
